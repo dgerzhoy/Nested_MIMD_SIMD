@@ -6,6 +6,13 @@ Gerzhoy, D., Sun, X., Zuzak, M., and Yeung, D. "Nested MIMD-SIMD Parallelization
 
 The two example benchmarks are MD and FFT6 from the openmp source code repository.
 
+These benchmarks are edited to launch their inner loops as kernels onto the GPU.
+
+In order to have a low-latency kernel launch, the GPU launch mechanism for each benchmark is adapted from:
+
+Michael Mrozek and Zbigniew Zdanowicz. 2016. GPU daemon: Road to zero cost submission. In Proceedings of the
+4th International Workshop on OpenCL.
+
 # Hardware Requirements
 
 CPU with Integrated GPU (code is written for Intel, but AMD should work as well with some edits) with OpenCL 2.0 capability.
@@ -29,4 +36,21 @@ The specific SDK you install depends highly on your system.
 ## Benchmark Directory
 
 Each benchmark contains not only the normal files the benchmark is implemented in (e.g. MD.cpp, fft6.cpp) but also a
-custom (per benchmark) class
+custom (per benchmark) structure CL_Buffers_t defined in the commBuffer.[h|cpp] files.
+
+    commBuffer.[h|cpp] 
+        CL_Buffers_t is used first to hold/manage SVM pointers.
+            Any parameters to the GPU kernel must be SVM pointers, so that they can be updated any time a low-latency launch is desired.
+
+        Some benchmark specific non-GPU arrays and variables are also kept in this structure for convinience.
+
+        The structure also defines several functions that setup the low-latency launch system (daemon), and schedule (launch) kernels to it.
+
+# Compiling
+
+cd << benchmark_directory >>
+make
+
+# Running
+
+Each benchmark directory has a runall.sh script that shoes how to run the kernel.

@@ -2,14 +2,8 @@
 
 N=4096
 make clean all
-#make
-#./md $N 1 0 |& tee CPU1_cleanTest
-#./md $N 4 0 |& tee CPU4_cleanTest
-# ./md $N 1 1 |& tee FLEX1_cleanTest
-# ./md $N 4 1 |& tee FLEX4_cleanTest
-./md $N 1 0
-./md $N 4 0
-./md $N 1 1
-./md $N 4 1
-
-# grep -a "Time Total" *cleanTest
+#./md <Size> <CPU Threads> <0 = CPU kernel, 1 = GPU Kernel>
+./md $N 1 0 #CPU 1 Thread
+./md $N 4 0 #CPU 4 Thread
+./md $N 1 1 #GPU 1 Thread
+./md $N 4 1 #GPU 1 Thread
