@@ -13,6 +13,8 @@ In order to have a low-latency kernel launch, the GPU launch mechanism for each 
 Michael Mrozek and Zbigniew Zdanowicz. 2016. GPU daemon: Road to zero cost submission. In Proceedings of the
 4th International Workshop on OpenCL.
 
+Rather than launching an OpenCL kernel every time we want to do work on the GPU. A "daemon" kernel is launched when the benchmark begins that polls a communication buffer, waiting to be given work. When we want to do work on the GPU, we write which threadblocks we want to execute into the communication buffer, and the daemon kernel executes the work.
+
 # Hardware Requirements
 
 CPU with Integrated GPU (code is written for Intel, but AMD should work as well with some edits) with OpenCL 2.0 capability.
@@ -45,6 +47,9 @@ custom (per benchmark) structure CL_Buffers_t defined in the commBuffer.[h|cpp] 
         Some benchmark specific non-GPU arrays and variables are also kept in this structure for convinience.
 
         The structure also defines several functions that setup the low-latency launch system (daemon), and schedule (launch) kernels to it.
+    
+    Kernels.cl
+        This file contains the GPU launch daemon, which is a wrapper around the actual GPU kernel we wish to execute on the GPU.
 
 # Compiling
 
