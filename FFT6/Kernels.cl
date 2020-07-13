@@ -1,5 +1,5 @@
 /*
- *
+ * Kernel and Launch Mechanism for FFT6
  * 
  *	Author: Daniel Gerzhoy
  *	email: dgerzhoy@umd.edu

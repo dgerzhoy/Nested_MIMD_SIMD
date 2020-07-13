@@ -1,5 +1,5 @@
 /*
- *	
+ *	Kernel and Launch Mechanism for MD
  * 
  *	Author: Daniel Gerzhoy
  *	email: dgerzhoy@umd.edu
