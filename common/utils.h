@@ -1,20 +1,20 @@
+/*
+ * This code is a heavily edited version of an example OpenCL program provided by Intel.
+ * 
+ *	Author: Daniel Gerzhoy
+ *	email: dgerzhoy@umd.edu
+ *
+ *	This work is meant for academic use only. The author claims no ownership of any code herein, or responsibility for its use.
+ */
 #pragma once
 
-#include "CL/cl.h"
-#include <stdarg.h>
-//#include <d3d9.h>
-//#include "EventStats.h"
 #include <ctime>
+#include <stdarg.h>
 #include <sys/time.h>
 
+#include "CL/cl.h"
+
 #define N_TIMERS 28 
-
-
-// Print useful information to the default output. Same usage as with printf
-void LogInfo(const char* str, ...);
-
-// Print error notification to the default output. Same usage as with printf
-void LogError(const char* str, ...);
 
 // Read OpenCL source code from fileName and store it in source. The number of read bytes returns in sourceSize
 int ReadSourceFromFile(const char* fileName, char** source, size_t* sourceSize);

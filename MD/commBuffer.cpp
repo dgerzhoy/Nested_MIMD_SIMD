@@ -32,7 +32,7 @@ force(N),
 accel(N),
 pPot(NUM_GROUPS*N)
 {
-	LogInfo("nG = %d | gws = %d | lws = %d | hwBlocks = %d | blocks = %d | nthreads = %d | gRes %d\n", NUM_GROUPS, gws, lws, hwBlocks, blocks, nThreads, group_residency);
+	printf("nG = %d | gws = %d | lws = %d | hwBlocks = %d | blocks = %d | nthreads = %d | gRes %d\n", NUM_GROUPS, gws, lws, hwBlocks, blocks, nThreads, group_residency);
 }
 
 void CL_Buffers_t::GPU_Set_Kernel_Args()
@@ -133,7 +133,7 @@ void CL_Buffers_t::GPU_Sync(int tid, int iter)
 		}
 		if(count >= N*100000)
 		{
-			LogError("\nTid = %d | ============================================Stuck in Infinite loop, done = %d / %d | iter = %d\n",tid,done,blocks,iter);
+			fprintf(stderr,"\nTid = %d | ============================================Stuck in Infinite loop, done = %d / %d | iter = %d\n",tid,done,blocks,iter);
 			KillCommKernel();
 			done = pDone[iter];
 			printf("Tid = %d | Done = %d\n",tid, done);

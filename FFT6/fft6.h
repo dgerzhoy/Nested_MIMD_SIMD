@@ -21,6 +21,3 @@
 typedef float real_type;
 
 typedef struct { real_type re, im; } complex;
-
-
-#define NUM_GROUPS 24

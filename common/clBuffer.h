@@ -1,3 +1,11 @@
+/*
+ *  SVM Buffer container helpers.
+ * 
+ *	Author: Daniel Gerzhoy
+ *	email: dgerzhoy@umd.edu
+ *
+ *	This work is meant for academic use only. The author claims no ownership of any code herein, or responsibility for its use.
+ */
 #pragma once
 
 #include <stdio.h>
@@ -59,7 +67,7 @@ cl_SVM_Buffer<T>::cl_SVM_Buffer(cl_uint size):
 	if(!ocl)
 		throw "You need a global ocl_args_d_t pointer!";
 
-	//LogInfo("Creating a 1D array of size = %d\n",size);
+	//printf("Creating a 1D array of size = %d\n",size);
 
 	cl_svm_mem_flags mem_flags = CL_MEM_READ_WRITE | CL_MEM_SVM_FINE_GRAIN_BUFFER | CL_MEM_SVM_ATOMICS;;
 	// the buffer should be aligned with 4K page and size should fit 64-byte cached line
@@ -70,10 +78,10 @@ cl_SVM_Buffer<T>::cl_SVM_Buffer(cl_uint size):
 
 	if (NULL == buffer)
 	{
-		LogError("Error: clSVMAlloc (1D) failed to allocate buffers. \n");
+		fprintf(stderr,"Error: clSVMAlloc (1D) failed to allocate buffers. \n");
 		throw "Error: clSVMAlloc (1D) failed to allocate buffers. \n";
 	}
-	//LogInfo("\tStart Addr = %p\n",buffer);
+	//printf("\tStart Addr = %p\n",buffer);
 	reset();
 
 }
@@ -92,17 +100,17 @@ cl_SVM_Buffer<T>::cl_SVM_Buffer(cl_uint size,const char * label):
 	// the buffer should be aligned with 4K page and size should fit 64-byte cached line
 	buffer_size = (((sizeof(T) * size) - 1) / 64 + 1) * 64;
 	
-	//LogInfo("Creating a 1D array of size = %d | (bsize %d) | (%s)\n",size,buffer_size,label);
+	//printf("Creating a 1D array of size = %d | (bsize %d) | (%s)\n",size,buffer_size,label);
 
 	buffer = (T *)clSVMAlloc(ocl->context,mem_flags, buffer_size, 0);
 	//buffer = (T *)malloc(buffer_size);
 
 	if (NULL == buffer)
 	{
-		LogError("Error: clSVMAlloc (1D) failed to allocate buffers. \n");
+		fprintf(stderr,"Error: clSVMAlloc (1D) failed to allocate buffers. \n");
 		throw "Error: clSVMAlloc (1D) failed to allocate buffers. \n";
 	}
-	//LogInfo("\tStart Addr = %p\n",buffer);
+	//printf("\tStart Addr = %p\n",buffer);
 	reset();
 
 }
@@ -116,7 +124,7 @@ cl_SVM_Buffer<T>::cl_SVM_Buffer(cl_uint size,const char * label, cl_svm_mem_flag
 	if(!ocl)
 		throw "You need a global ocl_args_d_t pointer!";
 
-	//LogInfo("Creating a 1D array of size = %d | (%s)\n",size,label);
+	//printf("Creating a 1D array of size = %d | (%s)\n",size,label);
 
 	cl_svm_mem_flags mem_flags = Mem_Flags | CL_MEM_SVM_FINE_GRAIN_BUFFER;
 	// the buffer should be aligned with 4K page and size should fit 64-byte cached line
@@ -127,10 +135,10 @@ cl_SVM_Buffer<T>::cl_SVM_Buffer(cl_uint size,const char * label, cl_svm_mem_flag
 
 	if (NULL == buffer)
 	{
-		LogError("Error: clSVMAlloc (1D) failed to allocate buffers. \n");
+		fprintf(stderr,"Error: clSVMAlloc (1D) failed to allocate buffers. \n");
 		throw "Error: clSVMAlloc (1D) failed to allocate buffers. \n";
 	}
-	//LogInfo("\tStart Addr = %p\n",buffer);
+	//printf("\tStart Addr = %p\n",buffer);
 	reset();
 
 }
@@ -155,10 +163,10 @@ cl_SVM_Buffer<T>::cl_SVM_Buffer(cl_uint size, cl_uint reset1):
 
 	if (NULL == buffer)
 	{
-		LogError("Error: clSVMAlloc (1D) failed to allocate buffers. \n");
+		fprintf(stderr,"Error: clSVMAlloc (1D) failed to allocate buffers. \n");
 		throw "Error: clSVMAlloc (1D) failed to allocate buffers. \n";
 	}
-	//LogInfo("\tStart Addr = %p\n",buffer);
+	//printf("\tStart Addr = %p\n",buffer);
 	if(reset1)
 		reset();
 
@@ -261,7 +269,7 @@ cl_SVM_Buffer_2D_Flat<T>::cl_SVM_Buffer_2D_Flat(uint size0, uint size1):
 	if(!ocl)
 		throw "You need a global ocl_args_d_t pointer!";
 
-	//LogInfo("Creating a 2D array of size0 = %d | size1 = %d\n",size0,size1);
+	//printf("Creating a 2D array of size0 = %d | size1 = %d\n",size0,size1);
 
 	// the buffer should be aligned with 4K page and size should fit 64-byte cached line
 	#if 1
@@ -275,10 +283,10 @@ cl_SVM_Buffer_2D_Flat<T>::cl_SVM_Buffer_2D_Flat(uint size0, uint size1):
 
 	if(NULL == buffer)
 	{
-		LogError("Error: malloc failed to allocate buffers. \n");
+		fprintf(stderr,"Error: malloc failed to allocate buffers. \n");
 		throw "Error: malloc failed to allocate buffers. \n";
 	}
-	//LogInfo("\tStart Addr = %p\n",buffer);
+	//printf("\tStart Addr = %p\n",buffer);
 
 	reset();
 
@@ -295,7 +303,7 @@ cl_SVM_Buffer_2D_Flat<T>::cl_SVM_Buffer_2D_Flat(uint size0, uint size1, const ch
 	if(!ocl)
 		throw "You need a global ocl_args_d_t pointer!";
 
-	//LogInfo("Creating a 2D array of size0 = %d | size1 = %d (%s)\n",size0,size1,label);
+	//printf("Creating a 2D array of size0 = %d | size1 = %d (%s)\n",size0,size1,label);
 
 		// the buffer should be aligned with 4K page and size should fit 64-byte cached line
 	#if 1
@@ -309,10 +317,10 @@ cl_SVM_Buffer_2D_Flat<T>::cl_SVM_Buffer_2D_Flat(uint size0, uint size1, const ch
 
 	if(NULL == buffer)
 	{
-		LogError("Error: malloc failed to allocate buffers. \n");
+		fprintf(stderr,"Error: malloc failed to allocate buffers. \n");
 		throw "Error: malloc failed to allocate buffers. \n";
 	}
-	//LogInfo("\tStart Addr = %p\n",buffer);
+	//printf("\tStart Addr = %p\n",buffer);
 
 	reset();
 
@@ -329,7 +337,7 @@ cl_SVM_Buffer_2D_Flat<T>::cl_SVM_Buffer_2D_Flat(uint size0, uint size1, const ch
 	if(!ocl)
 		throw "You need a global ocl_args_d_t pointer!";
 
-	//LogInfo("Creating a 2D array of size0 = %d | size1 = %d (%s)\n",size0,size1,label);
+	//printf("Creating a 2D array of size0 = %d | size1 = %d (%s)\n",size0,size1,label);
 
 		// the buffer should be aligned with 4K page and size should fit 64-byte cached line
 	#if 1
@@ -343,10 +351,10 @@ cl_SVM_Buffer_2D_Flat<T>::cl_SVM_Buffer_2D_Flat(uint size0, uint size1, const ch
 
 	if(NULL == buffer)
 	{
-		LogError("Error: malloc failed to allocate buffers. \n");
+		fprintf(stderr,"Error: malloc failed to allocate buffers. \n");
 		throw "Error: malloc failed to allocate buffers. \n";
 	}
-	//LogInfo("\tStart Addr = %p\n",buffer);
+	//printf("\tStart Addr = %p\n",buffer);
 
 	reset();
 
@@ -364,7 +372,7 @@ cl_SVM_Buffer_2D_Flat<T>::cl_SVM_Buffer_2D_Flat(uint size0):
 	if(!ocl)
 		throw "You need a global ocl_args_d_t pointer!";
 
-	//LogInfo("Creating a 2D array of size0 = %d\n",size0);
+	//printf("Creating a 2D array of size0 = %d\n",size0);
 
 		cl_svm_mem_flags mem_flags = CL_MEM_READ_WRITE | CL_MEM_SVM_FINE_GRAIN_BUFFER | CL_MEM_SVM_ATOMICS;
 		// the buffer should be aligned with 4K page and size should fit 64-byte cached line
@@ -375,7 +383,7 @@ cl_SVM_Buffer_2D_Flat<T>::cl_SVM_Buffer_2D_Flat(uint size0):
 
 	if(NULL == buffer)
 	{
-		LogError("Error: malloc failed to allocate buffers. \n");
+		fprintf(stderr,"Error: malloc failed to allocate buffers. \n");
 		throw "Error: malloc failed to allocate buffers. \n";
 	}
 
@@ -406,7 +414,7 @@ void cl_SVM_Buffer_2D_Flat<T>::alloc(int i, int size1)
 
 	if (NULL == buffer[i])
 	{
-		LogError("Error: clSVMAlloc (2D) failed to allocate buffers. \n");
+		fprintf(stderr,"Error: clSVMAlloc (2D) failed to allocate buffers. \n");
 		throw "Error: clSVMAlloc (2D) failed to allocate buffers. \n";
 	}
 
@@ -517,7 +525,7 @@ cl_SVM_Buffer_2D<T>::cl_SVM_Buffer_2D(uint size0, uint size1):
 	if(!ocl)
 		throw "You need a global ocl_args_d_t pointer!";
 
-		LogInfo("Creating a 2D array of size0 = %d | size1 = %d\n",size0,size1);
+		printf("Creating a 2D array of size0 = %d | size1 = %d\n",size0,size1);
 
 		cl_svm_mem_flags mem_flags = CL_MEM_READ_WRITE | CL_MEM_SVM_FINE_GRAIN_BUFFER | CL_MEM_SVM_ATOMICS;;
 		// the buffer should be aligned with 4K page and size should fit 64-byte cached line
@@ -528,7 +536,7 @@ cl_SVM_Buffer_2D<T>::cl_SVM_Buffer_2D(uint size0, uint size1):
 
 	if(NULL == buffer)
 	{
-		LogError("Error: malloc failed to allocate buffers. \n");
+		fprintf(stderr,"Error: malloc failed to allocate buffers. \n");
 		throw "Error: malloc failed to allocate buffers. \n";
 	}
 
@@ -541,7 +549,7 @@ cl_SVM_Buffer_2D<T>::cl_SVM_Buffer_2D(uint size0, uint size1):
 
 		if (NULL == buffer[i])
 		{
-			LogError("Error: clSVMAlloc (2D) failed to allocate buffers. \n");
+			fprintf(stderr,"Error: clSVMAlloc (2D) failed to allocate buffers. \n");
 			throw "Error: clSVMAlloc (2D) failed to allocate buffers. \n";
 		}
 	}
@@ -558,7 +566,7 @@ cl_SVM_Buffer_2D<T>::cl_SVM_Buffer_2D(uint size0):
 	if(!ocl)
 		throw "You need a global ocl_args_d_t pointer!";
 
-		LogInfo("Creating a 2D array of size0 = %d\n",size0);
+		printf("Creating a 2D array of size0 = %d\n",size0);
 
 		cl_svm_mem_flags mem_flags = CL_MEM_READ_WRITE | CL_MEM_SVM_FINE_GRAIN_BUFFER | CL_MEM_SVM_ATOMICS;;
 		// the buffer should be aligned with 4K page and size should fit 64-byte cached line
@@ -569,7 +577,7 @@ cl_SVM_Buffer_2D<T>::cl_SVM_Buffer_2D(uint size0):
 
 	if(NULL == buffer)
 	{
-		LogError("Error: malloc failed to allocate buffers. \n");
+		fprintf(stderr,"Error: malloc failed to allocate buffers. \n");
 		throw "Error: malloc failed to allocate buffers. \n";
 	}
 
@@ -604,7 +612,7 @@ void cl_SVM_Buffer_2D<T>::alloc(int i, int size1)
 
 	if (NULL == buffer[i])
 	{
-		LogError("Error: clSVMAlloc (2D) failed to allocate buffers. \n");
+		fprintf(stderr,"Error: clSVMAlloc (2D) failed to allocate buffers. \n");
 		throw "Error: clSVMAlloc (2D) failed to allocate buffers. \n";
 	}
 

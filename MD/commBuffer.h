@@ -11,18 +11,19 @@
 #pragma once
 
 #include <cassert>
+#include <functional>
+#include <queue>
 #include <string>
 #include <math.h>
-#include "clBuffer.h"
 #include <unistd.h>
-#include <queue>
-#include "clSetup.h"
-#include "utils.h"
-#include <functional>
 #include <vector>
-#include "MD.h"
 
-#define NUM_GROUPS 24
+#include "clBuffer.h"
+#include "clSetup.h"
+#include "MD.h"
+#include "utils.h"
+
+#define NUM_GROUPS 24 //Number of Execution units on the GPU
 
 enum kType
 {

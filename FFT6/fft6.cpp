@@ -7,23 +7,19 @@
  *	This work is meant for academic use only. The author claims no ownership of any code herein, or responsibility for its use.
  */
 
+#include "fft6.h"
+#include "commBuffer.h"
 
-
-#include "clSetup.h"
-
-#include "config.h"
 #include <cassert>
 #include <string>
-//#include <atomic>
 #include <math.h>
-#include "clBuffer.h"
-#include "utils.h"
 #include <unistd.h>
 #include <queue>
 #include <string>
 
-#include "fft6.h"
-#include "commBuffer.h"
+#include "clSetup.h"
+#include "clBuffer.h"
+#include "utils.h"
 
 /* Input values (CONSTANTS) */
 unsigned NN;                 /* input vector is NN complex values */
@@ -463,7 +459,7 @@ void *CPU_Slave(void * arguments)
 void CPU_Main()
 {
 
-	//LogInfo("Entering CPU Compute (pthreads)\n");
+	//printf("Entering CPU Compute (pthreads)\n");
 	int N = pCommBuffer->N;
 	int num_threads = pCommBuffer->nThreads;
 
@@ -480,15 +476,15 @@ void CPU_Main()
 
 	for(index = 1; index < num_threads; index++){
 
-		//LogInfo("LAUNCHING SLAVE %d|N: %d\n", index,N);
+		//printf("LAUNCHING SLAVE %d|N: %d\n", index,N);
 		thread_args[index].index = index;
 
 			rc = pthread_create( &threads[index], NULL, CPU_Slave, &thread_args[index] );
 			if (rc != 0){
-					LogError("ERROR: Failed to create thread index = %d, rc = %d\n", index, rc);
+					fprintf(stderr,"ERROR: Failed to create thread index = %d, rc = %d\n", index, rc);
 					exit(-1);
 			}
-		//LogInfo("SLAVE %d LAUNCHED\n", index);
+		//printf("SLAVE %d LAUNCHED\n", index);
 
 	}
 
@@ -497,12 +493,12 @@ void CPU_Main()
 
 	roi_enter();
 
-	//LogInfo("Main thread core LAUNCHED\n");
+	//printf("Main thread core LAUNCHED\n");
 	for( int i = 0; i < N; i+= num_threads)
 	{
 		if(i%(N/8)==0)
 		{
-			LogInfo("Main outer_i = %d\n",i);
+			printf("Main outer_i = %d\n",i);
 		}
 		core_args.outer_i = i;
 		CPU_Core(&core_args);
@@ -661,15 +657,15 @@ void CL_Buffers_t::GPU_Main(main_args_t * args)
 
 	for(index = 1; index < num_threads; index++){
 
-		//LogInfo("LAUNCHING SLAVE %d|N: %d\n", index,N);
+		//printf("LAUNCHING SLAVE %d|N: %d\n", index,N);
 		thread_args[index].index = index;
 
 			rc = pthread_create( &threads[index], NULL, GPU_Slave, &thread_args[index] );
 			if (rc != 0){
-					LogError("ERROR: Failed to create thread index = %d, rc = %d\n", index, rc);
+					fprintf(stderr,"ERROR: Failed to create thread index = %d, rc = %d\n", index, rc);
 					exit(-1);
 			}
-		//LogInfo("SLAVE %d LAUNCHED\n", index);
+		//printf("SLAVE %d LAUNCHED\n", index);
 
 	}
 	core_args_t core_args;
@@ -679,12 +675,12 @@ void CL_Buffers_t::GPU_Main(main_args_t * args)
 	GPU_Set_Kernel_Args();
 	GPU_Launch_Kernel();
 	
-	//LogInfo("Main thread core LAUNCHED\n");
+	//printf("Main thread core LAUNCHED\n");
 	for( int i = 0; i < N; i+= num_threads)
 	{
 		if(i%(N/8)==0)
 		{
-			LogInfo("Main outer_i = %d\n",i);
+			printf("Main outer_i = %d\n",i);
 		}
 		core_args.outer_i = i;
 		GPU_Core(&core_args);
@@ -751,14 +747,14 @@ int main(int argc, char* argv[])
 	}
 
 	if(cutoff<64 && Kernel_Type == GPU){
-		LogError("A cutoff of %d will not work for GPU\n",cutoff);
+		fprintf(stderr,"A cutoff of %d will not work for GPU\n",cutoff);
 		exit(1);
 
 	}
 
-	LogInfo("Width: %d\n", N);
-	LogInfo("nThreads: %d\n", num_threads);
-	LogInfo("cutoff: %d\n", cutoff);
+	printf("Width: %d\n", N);
+	printf("nThreads: %d\n", num_threads);
+	printf("cutoff: %d\n", cutoff);
 
 	//Intialize container 1 queue and 1 kernel
 	*ocl = ocl_args_d_t(1,1);
@@ -770,7 +766,7 @@ int main(int argc, char* argv[])
 
 	//printDeviceInfo(ocl->device);
 
-	LogInfo("\n---Generated input, Calling CreateandBuildProgram\n");
+	printf("\n---Generated input, Calling CreateandBuildProgram\n");
 
 	std::string kernel_file_path = "/home/dgerzhoy/Workspace/LaunchDaemon_clean/FFT6/";
 	std::string kernel_file_name = "Kernels.cl";
@@ -794,7 +790,7 @@ int main(int argc, char* argv[])
 	{
 		CHECK_ERRORS(err);
 		CHECK_ERRORS(clGetKernelWorkGroupInfo(ocl->kernels[0], ocl->device, CL_KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE, sizeof(size_t), &WG_Size_Multiple, NULL));
-		//LogInfo("Kernel returned %d\n",WG_Size_Multiple);
+		//printf("Kernel returned %d\n",WG_Size_Multiple);
 	}
 
 	//Initialize the Communication Buffer

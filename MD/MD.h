@@ -6,8 +6,6 @@
  *
  *	This work is meant for academic use only. The author claims no ownership of any code herein, or responsibility for its use.
  */
-
-
 #pragma once
 
 #ifndef M_PI_2
@@ -16,5 +14,3 @@
 
 #define NDIM 3
 typedef float vnd_t[NDIM];
-
-

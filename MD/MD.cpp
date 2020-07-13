@@ -7,21 +7,18 @@
  *	This work is meant for academic use only. The author claims no ownership of any code herein, or responsibility for its use.
  */
 
-
-#include "clSetup.h"
-
-#include <cassert>
-#include <string>
-#include <atomic>
-#include <math.h>
-#include "clBuffer.h"
-#include "utils.h"
-#include <unistd.h>
-//#include "kernel.h"
-#include <queue>
-
 #include "MD.h"
 #include "commBuffer.h"
+
+#include <atomic>
+#include <cassert>
+#include <math.h>
+#include <queue>
+#include <string>
+#include <unistd.h>
+
+#include "clBuffer.h"
+#include "clSetup.h"
 
 int NPARTS;       /* No. of particles */
 
@@ -270,7 +267,7 @@ void CPU_Main()
 	rc = pthread_setaffinity_np(threads[0], sizeof(cpu_set_t), &cpuset);
 	if(rc != 0)
 	{
-		LogError("ERROR: Failed to set thread affinity index = %d, rc = %d\n", index, rc);
+		fprintf(stderr,"ERROR: Failed to set thread affinity index = %d, rc = %d\n", index, rc);
    		exit(-1);
 	}
 
@@ -281,13 +278,13 @@ void CPU_Main()
 
 			rc = pthread_create( &threads[index], NULL, CPU_Slave, &thread_args[index] );
 			if (rc != 0){
-      		LogError("ERROR: Failed to create thread index = %d, rc = %d\n", index, rc);
+      		fprintf(stderr,"ERROR: Failed to create thread index = %d, rc = %d\n", index, rc);
       		exit(-1);
     	}
 			rc = pthread_setaffinity_np(threads[index], sizeof(cpu_set_t), &cpuset);
 			if(rc != 0)
 			{
-				LogError("ERROR: Failed to set thread affinity index = %d, rc = %d\n", index, rc);
+				fprintf(stderr,"ERROR: Failed to set thread affinity index = %d, rc = %d\n", index, rc);
 	      		exit(-1);
 			}
 
@@ -421,7 +418,7 @@ void GPU_Main()
 
 			rc = pthread_create( &threads[index], NULL, GPU_Slave, &thread_args[index] );
 			if (rc != 0){
-      		LogError("ERROR: Failed to create thread index = %d, rc = %d\n", index, rc);
+      		fprintf(stderr,"ERROR: Failed to create thread index = %d, rc = %d\n", index, rc);
       		exit(-1);
     	}
 
@@ -436,7 +433,7 @@ void GPU_Main()
 		void *ret_vals;
 		rc = pthread_join(threads[index],&ret_vals);
 		if (rc != 0){
-			LogError("ERROR: Failed to join thread index = %d, rc = %d\n", index, rc);
+			fprintf(stderr,"ERROR: Failed to join thread index = %d, rc = %d\n", index, rc);
 			exit(-1);
 		}
 

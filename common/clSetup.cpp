@@ -1,3 +1,12 @@
+/*
+ * This code is a heavily edited version of an example OpenCL program provided by Intel.
+ * 
+ *	Author: Daniel Gerzhoy
+ *	email: dgerzhoy@umd.edu
+ *
+ *	This work is meant for academic use only. The author claims no ownership of any code herein, or responsibility for its use.
+ */
+
 #include <cassert>
 #include "clSetup.h"
 #include "utils.h"
@@ -34,17 +43,6 @@ ocl_args_d_t::ocl_args_d_t(int nQueues, int nKernels):
 
 }
 
-/*
- * destructor - called only once
- * Release all OpenCL objects
- * This is a regular sequence of calls to deallocate all created OpenCL resources in bootstrapOpenCL.
- *
- * You may want to call these deallocation procedures in the middle of your application execution
- * (not at the end) if you don't further need OpenCL runtime.
- * You may want to do that in order to free some memory, for example,
- * or recreate OpenCL objects with different parameters.
- *
- */
 ocl_args_d_t::~ocl_args_d_t()
 {
 		cl_int err = CL_SUCCESS;
@@ -211,36 +209,36 @@ cl_int printDeviceInfo(cl_device_id device) {
 	cl_command_queue_properties ret_cmd_props;
 
 
-	LogInfo("\nPrinting Device info-------------------\n");
+	printf("\nPrinting Device info-------------------\n");
 
 	info = CL_DEVICE_MAX_CLOCK_FREQUENCY;
 	CHECK_ERRORS(clGetDeviceInfo(device, info, sizeof(cl_int), &ret_int, NULL));
 
-	LogInfo("\t CL_DEVICE_MAX_CLOCK_FREQUENCY returns: %d\n", ret_int);
+	printf("\t CL_DEVICE_MAX_CLOCK_FREQUENCY returns: %d\n", ret_int);
 
 	info = CL_DEVICE_ADDRESS_BITS;
 
 	CHECK_ERRORS(clGetDeviceInfo(device, info, sizeof(cl_int), &ret_int, NULL));
 
-	LogInfo("\t CL_DEVICE_ADDRESS_BITS returns: %d\n", ret_int);
+	printf("\t CL_DEVICE_ADDRESS_BITS returns: %d\n", ret_int);
 
 	info = CL_DEVICE_MAX_COMPUTE_UNITS;
 
 	CHECK_ERRORS(clGetDeviceInfo(device, info, sizeof(cl_int), &ret_int, NULL));
 
-	LogInfo("\t CL_DEVICE_MAX_COMPUTE_UNITS returns: %d\n", ret_int);
+	printf("\t CL_DEVICE_MAX_COMPUTE_UNITS returns: %d\n", ret_int);
 
 	info = CL_DEVICE_MAX_WORK_GROUP_SIZE;
 
 	CHECK_ERRORS(clGetDeviceInfo(device, info, sizeof(size_t), &ret_sizet, NULL));
 
-	LogInfo("\t CL_DEVICE_MAX_WORK_GROUP_SIZE returns: %d\n", ret_sizet);
+	printf("\t CL_DEVICE_MAX_WORK_GROUP_SIZE returns: %d\n", ret_sizet);
 
 	info = CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS;
 
 	CHECK_ERRORS(clGetDeviceInfo(device, info, sizeof(cl_int), &ret_int, NULL));
 
-	LogInfo("\t CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS returns: %d\n", ret_int);
+	printf("\t CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS returns: %d\n", ret_int);
 
 	size_t *retVect_sizet = (size_t *)malloc(sizeof(size_t)*ret_int);
 
@@ -249,14 +247,14 @@ cl_int printDeviceInfo(cl_device_id device) {
 	CHECK_ERRORS(clGetDeviceInfo(device, info, ret_int*sizeof(size_t), retVect_sizet, NULL));
 
 		for (int i = 0; i < ret_int; i++) {
-			LogInfo("\t CL_DEVICE_MAX_WORK_ITEM_SIZES %d returns: %d\n", i, retVect_sizet[i]);
+			printf("\t CL_DEVICE_MAX_WORK_ITEM_SIZES %d returns: %d\n", i, retVect_sizet[i]);
 		}
 
 	info = CL_DEVICE_DOUBLE_FP_CONFIG;
 
 	CHECK_ERRORS(clGetDeviceInfo(device, info, sizeof(cl_device_fp_config), &ret_fp_config, NULL));
 
-		LogInfo("\t CL_DEVICE_DOUBLE_FP_CONFIG returns: %ul\n", ret_fp_config);
+		printf("\t CL_DEVICE_DOUBLE_FP_CONFIG returns: %ul\n", ret_fp_config);
 
 	info = CL_DEVICE_EXTENSIONS;
 	CHECK_ERRORS(clGetDeviceInfo(device, info, 0, NULL, &ret_sizet));
@@ -268,7 +266,7 @@ cl_int printDeviceInfo(cl_device_id device) {
 			if (ret_CharP[i] == ' ')
 				ret_CharP[i] = '\n';
 		}
-		LogInfo("\t CL_DEVICE_EXTENSIONS returns: %s\n", ret_CharP);
+		printf("\t CL_DEVICE_EXTENSIONS returns: %s\n", ret_CharP);
 
 	info = CL_DEVICE_SVM_CAPABILITIES;
 
@@ -281,123 +279,117 @@ cl_int printDeviceInfo(cl_device_id device) {
 		printf("ATOM :%X\n",CL_DEVICE_SVM_ATOMICS);
 		if(ret_svm_cap & CL_DEVICE_SVM_COARSE_GRAIN_BUFFER){
 			ret_CharP = "CL_DEVICE_SVM_COARSE_GRAIN_BUFFER";
-			LogInfo("\t CL_DEVICE_SVM_CAPABILITIES returns: %s\n", ret_CharP);
+			printf("\t CL_DEVICE_SVM_CAPABILITIES returns: %s\n", ret_CharP);
 		}
 		if(ret_svm_cap & CL_DEVICE_SVM_FINE_GRAIN_BUFFER){
 			ret_CharP = "CL_DEVICE_SVM_FINE_GRAIN_BUFFER";
-			LogInfo("\t CL_DEVICE_SVM_CAPABILITIES returns: %s\n", ret_CharP);
+			printf("\t CL_DEVICE_SVM_CAPABILITIES returns: %s\n", ret_CharP);
 		}
 		if(ret_svm_cap & CL_DEVICE_SVM_FINE_GRAIN_SYSTEM){
 			ret_CharP = "CL_DEVICE_SVM_FINE_GRAIN_SYSTEM";
-			LogInfo("\t CL_DEVICE_SVM_CAPABILITIES returns: %s\n", ret_CharP);
+			printf("\t CL_DEVICE_SVM_CAPABILITIES returns: %s\n", ret_CharP);
 		}
 		if(ret_svm_cap & CL_DEVICE_SVM_ATOMICS){
 			ret_CharP = "CL_DEVICE_SVM_ATOMICS";
-			LogInfo("\t CL_DEVICE_SVM_CAPABILITIES returns: %s\n", ret_CharP);
+			printf("\t CL_DEVICE_SVM_CAPABILITIES returns: %s\n", ret_CharP);
 		}
 
 	info = CL_DEVICE_MAX_CONSTANT_ARGS;
 	CHECK_ERRORS(clGetDeviceInfo(device, info, sizeof(cl_int), &ret_int, NULL));
-	LogInfo("\t CL_DEVICE_MAX_CONSTANT_ARGS returns: %d\n", ret_int);
+	printf("\t CL_DEVICE_MAX_CONSTANT_ARGS returns: %d\n", ret_int);
 
 	info = CL_DEVICE_MAX_CONSTANT_BUFFER_SIZE;
 	CHECK_ERRORS(clGetDeviceInfo(device, info, sizeof(cl_ulong), &ret_ulong, NULL));
-	LogInfo("\t CL_DEVICE_MAX_CONSTANT_BUFFER_SIZE returns: %lu\n", ret_ulong);
+	printf("\t CL_DEVICE_MAX_CONSTANT_BUFFER_SIZE returns: %lu\n", ret_ulong);
 
 	info = CL_DEVICE_GLOBAL_MEM_CACHE_SIZE;
 	CHECK_ERRORS(clGetDeviceInfo(device, info, sizeof(cl_ulong), &ret_ulong, NULL));
-	LogInfo("\t CL_DEVICE_GLOBAL_MEM_CACHE_SIZE returns: %lu\n", ret_ulong);
+	printf("\t CL_DEVICE_GLOBAL_MEM_CACHE_SIZE returns: %lu\n", ret_ulong);
 
 		info = CL_DEVICE_GLOBAL_MEM_CACHELINE_SIZE;
 	CHECK_ERRORS(clGetDeviceInfo(device, info, sizeof(cl_int), &ret_int, NULL));
-	LogInfo("\t CL_DEVICE_GLOBAL_MEM_CACHELINE_SIZE returns: %d\n", ret_int);
+	printf("\t CL_DEVICE_GLOBAL_MEM_CACHELINE_SIZE returns: %d\n", ret_int);
 
 	info = CL_DEVICE_GLOBAL_MEM_SIZE;
 	CHECK_ERRORS(clGetDeviceInfo(device, info, sizeof(cl_ulong), &ret_ulong, NULL));
-	LogInfo("\t CL_DEVICE_GLOBAL_MEM_SIZE returns: %lu\n", ret_ulong);
+	printf("\t CL_DEVICE_GLOBAL_MEM_SIZE returns: %lu\n", ret_ulong);
 
 	info = CL_DEVICE_LOCAL_MEM_SIZE;
 	CHECK_ERRORS(clGetDeviceInfo(device, info, sizeof(cl_ulong), &ret_ulong, NULL));
-	LogInfo("\t CL_DEVICE_LOCAL_MEM_SIZE returns: %lu\n", ret_ulong);
+	printf("\t CL_DEVICE_LOCAL_MEM_SIZE returns: %lu\n", ret_ulong);
 
 	info = CL_DEVICE_MAX_ON_DEVICE_QUEUES;
 	CHECK_ERRORS(clGetDeviceInfo(device, info, sizeof(cl_int), &ret_int, NULL));
-	LogInfo("\t CL_DEVICE_MAX_ON_DEVICE_QUEUES returns: %d\n", ret_int);
+	printf("\t CL_DEVICE_MAX_ON_DEVICE_QUEUES returns: %d\n", ret_int);
 
 	info = CL_DEVICE_MAX_ON_DEVICE_EVENTS;
 	CHECK_ERRORS(clGetDeviceInfo(device, info, sizeof(cl_int), &ret_int, NULL));
-	LogInfo("\t CL_DEVICE_MAX_ON_DEVICE_EVENTS returns: %d\n", ret_int);
+	printf("\t CL_DEVICE_MAX_ON_DEVICE_EVENTS returns: %d\n", ret_int);
 
 	info = CL_DEVICE_QUEUE_ON_HOST_PROPERTIES;
 	CHECK_ERRORS(clGetDeviceInfo(device, info, sizeof(cl_command_queue_properties), &ret_cmd_props, NULL));
 
-	LogInfo("\t CL_DEVICE_QUEUE_ON_HOST_PROPERTIES  returns: \n");
+	printf("\t CL_DEVICE_QUEUE_ON_HOST_PROPERTIES  returns: \n");
 	if(ret_cmd_props & CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE) {
-		LogInfo("\t\tCL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE\n");
+		printf("\t\tCL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE\n");
 	}
 	if(ret_cmd_props & CL_QUEUE_PROFILING_ENABLE) {
-		LogInfo("\t\tCL_QUEUE_PROFILING_ENABLE\n");
+		printf("\t\tCL_QUEUE_PROFILING_ENABLE\n");
 	}
 
 	info = CL_DEVICE_QUEUE_ON_DEVICE_PROPERTIES;
 	CHECK_ERRORS(clGetDeviceInfo(device, info, sizeof(cl_command_queue_properties), &ret_cmd_props, NULL));
 
-	LogInfo("\t CL_DEVICE_QUEUE_ON_DEVICE_PROPERTIES returns: \n");
+	printf("\t CL_DEVICE_QUEUE_ON_DEVICE_PROPERTIES returns: \n");
 	if(ret_cmd_props & CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE) {
-		LogInfo("\t\t CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE \n");
+		printf("\t\t CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE \n");
 	}
 	if(ret_cmd_props & CL_QUEUE_PROFILING_ENABLE) {
-		LogInfo("\t\t CL_QUEUE_PROFILING_ENABLE \n");
+		printf("\t\t CL_QUEUE_PROFILING_ENABLE \n");
 	}
 
 	info = CL_DEVICE_QUEUE_ON_DEVICE_MAX_SIZE;
 	CHECK_ERRORS(clGetDeviceInfo(device, info, sizeof(cl_int), &ret_int, NULL));
-	LogInfo("\t CL_DEVICE_QUEUE_ON_DEVICE_MAX_SIZE returns: %d\n", ret_int);
+	printf("\t CL_DEVICE_QUEUE_ON_DEVICE_MAX_SIZE returns: %d\n", ret_int);
 
 	info = CL_DEVICE_QUEUE_ON_DEVICE_PREFERRED_SIZE;
 	CHECK_ERRORS(clGetDeviceInfo(device, info, sizeof(cl_int), &ret_int, NULL));
-	LogInfo("\t CL_DEVICE_QUEUE_ON_DEVICE_PREFERRED_SIZE returns: %d\n", ret_int);
+	printf("\t CL_DEVICE_QUEUE_ON_DEVICE_PREFERRED_SIZE returns: %d\n", ret_int);
 
 				info = CL_DEVICE_VERSION;
 	CHECK_ERRORS(clGetDeviceInfo(device, info, 0, NULL, &ret_sizet));
 	ret_CharP = (char *)malloc(sizeof(char) * ret_sizet);
 	CHECK_ERRORS(clGetDeviceInfo(device, info, ret_sizet, ret_CharP, NULL));
 
-	LogInfo("\t CL_DEVICE_VERSION returns: %s\n", ret_CharP);
+	printf("\t CL_DEVICE_VERSION returns: %s\n", ret_CharP);
 
 				info = CL_DRIVER_VERSION;
 	CHECK_ERRORS(clGetDeviceInfo(device, info, 0, NULL, &ret_sizet));
 	ret_CharP = (char *)malloc(sizeof(char) * ret_sizet);
 	CHECK_ERRORS(clGetDeviceInfo(device, info, ret_sizet, ret_CharP, NULL));
 
-	LogInfo("\t CL_DRIVER_VERSION returns: %s\n", ret_CharP);
+	printf("\t CL_DRIVER_VERSION returns: %s\n", ret_CharP);
 
 				info = CL_DEVICE_OPENCL_C_VERSION;
 	CHECK_ERRORS(clGetDeviceInfo(device, info, 0, NULL, &ret_sizet));
 	ret_CharP = (char *)malloc(sizeof(char) * ret_sizet);
 	CHECK_ERRORS(clGetDeviceInfo(device, info, ret_sizet, ret_CharP, NULL));
 
-	LogInfo("\t CL_DEVICE_OPENCL_C_VERSION returns: %s\n", ret_CharP);
+	printf("\t CL_DEVICE_OPENCL_C_VERSION returns: %s\n", ret_CharP);
 
 	info = CL_DEVICE_PROFILING_TIMER_RESOLUTION;
 
 	CHECK_ERRORS(clGetDeviceInfo(device, info, sizeof(size_t), &ret_sizet, NULL));
 
-	LogInfo("\t CL_DEVICE_PROFILING_TIMER_RESOLUTION returns: %d\n", ret_sizet);
-	//CL_DEVICE_GLOBAL_MEM_CACHE_SIZE ulong
-
-	//
-
+	printf("\t CL_DEVICE_PROFILING_TIMER_RESOLUTION returns: %d\n", ret_sizet);
 
 	return err;
-
-
 }
 
 cl_int printKernelInfo(cl_kernel kernel)
 {
 
-		//LogInfo("Printing Kernel Info\n");
+		//printf("Printing Kernel Info\n");
 
 		cl_kernel_work_group_info info;
 
@@ -412,10 +404,10 @@ cl_int printKernelInfo(cl_kernel kernel)
 		/*p = (void *)ret3;
 		CHECK_ERRORS(clGetKernelWorkGroupInfo(kernel,ocl->device,info,3*sizeof(size_t),p,NULL));
 
-		LogInfo("CL_KERNEL_GLOBAL_WORK_SIZE: \n");
+		printf("CL_KERNEL_GLOBAL_WORK_SIZE: \n");
 		for(int i = 0; i < 3; i++)
 		{
-			LogInfo("\t%d",ret3[i]);
+			printf("\t%d",ret3[i]);
 
 		}*/
 
@@ -427,17 +419,17 @@ cl_int printKernelInfo(cl_kernel kernel)
 		info = CL_KERNEL_LOCAL_MEM_SIZE; //cl_ulong
 		p = (void *)&ret_long;
 		CHECK_ERRORS(clGetKernelWorkGroupInfo(kernel,ocl->device,info,sizeof(ret_long),p,NULL));
-		LogInfo("CL_KERNEL_LOCAL_MEM_SIZE: %lu\n",ret_long);
+		printf("CL_KERNEL_LOCAL_MEM_SIZE: %lu\n",ret_long);
 
 		info = CL_KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE; //size_t
 		p = (void *)&ret;
 		CHECK_ERRORS(clGetKernelWorkGroupInfo(kernel,ocl->device,info,sizeof(ret),p,NULL));
-		LogInfo("CL_KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE: %d\n",ret);
+		printf("CL_KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE: %d\n",ret);
 
 		info = CL_KERNEL_PRIVATE_MEM_SIZE; //cl_ulong
 		p = (void *)&ret_long;
 		CHECK_ERRORS(clGetKernelWorkGroupInfo(kernel,ocl->device,info,sizeof(ret_long),p,NULL));
-		LogInfo("CL_KERNEL_PRIVATE_MEM_SIZE: %lu\n",ret_long);
+		printf("CL_KERNEL_PRIVATE_MEM_SIZE: %lu\n",ret_long);
 }
 
 
@@ -502,11 +494,11 @@ cl_platform_id FindOpenCLPlatform(const char* preferredPlatform, cl_device_type 
 		// No platform ID will be return, since platforms is NULL
 		err = clGetPlatformIDs(0, NULL, &numPlatforms);
 		CHECK_ERRORS(err);
-		// LogInfo("Number of available platforms: %u\n", numPlatforms);
-		//exit(1);
+		// printf("Number of available platforms: %u\n", numPlatforms);
+
 		if (0 == numPlatforms)
 		{
-				LogError("Error: No platforms found!\n");
+				fprintf(stderr,"Error: No platforms found!\n");
 				return NULL;
 		}
 
@@ -575,8 +567,6 @@ cl_platform_id FindOpenCLPlatform(const char* preferredPlatform, cl_device_type 
 /*
  * This function read the OpenCL platdorm and device0G versions
  * (using clGetxxxInfo API) and stores it in the ocl structure.
- * Later it will enable us to support both OpenCL 1.2 and 2.0 platforms and devices
- * in the same program.
  */
 int GetPlatformAndDeviceVersion (cl_platform_id platformId)
 {
@@ -645,14 +635,6 @@ int GetPlatformAndDeviceVersion (cl_platform_id platformId)
  * This function picks/creates necessary OpenCL objects which are needed.
  * The objects are:
  * OpenCL platform, device, context, and command queue.
- *
- * All these steps are needed to be performed once in a regular OpenCL application.
- * This happens before actual compute kernels calls are performed.
- *
- * For convenience, in this application you store all those basic OpenCL objects in structure ocl_args_d_t,
- * so this function populates fields of this structure, which is passed as parameter ocl.
- * Please, consider reviewing the fields before going further.
- * The structure definition is right in the beginning of this file.
  */
 int SetupOpenCL(cl_device_type deviceType)
 {
@@ -668,19 +650,17 @@ int SetupOpenCL(cl_device_type deviceType)
 		#endif
 		if (NULL == platformId)
 		{
-				LogError("Error: Failed to find OpenCL platform.\n");
+				fprintf(stderr,"Error: Failed to find OpenCL platform.\n");
 				return CL_INVALID_VALUE;
 		}
 
 		// Create context with device of specified type.
 		// Required device type is passed as function argument deviceType.
-		// So you may use this function to create context for any CPU or GPU OpenCL device.
-		// The creation is synchronized (pfn_notify is NULL) and NULL user_data
 		cl_context_properties contextProperties[] = {CL_CONTEXT_PLATFORM, (cl_context_properties)platformId, 0};
 		ocl->context = clCreateContextFromType(contextProperties, deviceType, NULL, NULL, &err);
 		if ((CL_SUCCESS != err) || (NULL == ocl->context))
 		{
-				LogError("Couldn't create a context, clCreateContextFromType() returned '%s'.\n", TranslateOpenCLError(err));
+				fprintf(stderr,"Couldn't create a context, clCreateContextFromType() returned '%s'.\n", TranslateOpenCLError(err));
 				return err;
 		}
 
@@ -694,7 +674,6 @@ int SetupOpenCL(cl_device_type deviceType)
 		// Create command queue.
 		// OpenCL kernels are enqueued for execution to a particular device through special objects called command queues.
 		// Command queue guarantees some ordering between calls and other OpenCL commands.
-		// Here you create a simple in-order OpenCL command queue that doesn't allow execution of two kernels in parallel on a target device.
 		for(int i = 0; i < ocl->nQueues; i++)
 		{
 			if (OPENCL_VERSION_2_0 == ocl->deviceVersion)
@@ -711,8 +690,6 @@ int SetupOpenCL(cl_device_type deviceType)
 				// default behavior: OpenCL 1.2
 				printf("ERROR: LaunchDaemon System does not work with OpenCL 1.2\n");
 				exit(1);
-				cl_command_queue_properties properties = CL_QUEUE_PROFILING_ENABLE;
-				ocl->commandQueues[i] = clCreateCommandQueue(ocl->context, ocl->device, properties, &err);
 			}
 
 			CHECK_ERRORS(err);
@@ -739,7 +716,7 @@ int CreateAndBuildProgram(std::string kernel_file_path, std::string kernel_file_
 		}
 		const char *build_options = build_options_str.c_str();
 
-		//LogInfo("Build Options: %s",build_options);
+		printf("Build Options: %s\n",build_options);
 
 		// Upload the OpenCL C source code from the input file to source
 		// The size of the C program is returned in sourceSize
@@ -748,32 +725,36 @@ int CreateAndBuildProgram(std::string kernel_file_path, std::string kernel_file_
 		err = ReadSourceFromFile(kernel_file_name.c_str(), &source, &src_size);
 		if (CL_SUCCESS != err)
 		{
-				LogError("Error: ReadSourceFromFile returned %s.\n", TranslateOpenCLError(err));
-				goto Finish;
+				fprintf(stderr,"Error: ReadSourceFromFile returned %s.\n", TranslateOpenCLError(err));
+				if (source)
+				{
+						delete[] source;
+						source = NULL;
+				}
+				return err;
 		}
 
 		// And now after you obtained a regular C string call clCreateProgramWithSource to create OpenCL program object.
 		ocl->program = clCreateProgramWithSource(ocl->context, 1, (const char**)&source, &src_size, &err);
 		if (CL_SUCCESS != err)
 		{
-				LogError("Error: clCreateProgramWithSource returned %s.\n", TranslateOpenCLError(err));
-				goto Finish;
+				fprintf(stderr,"Error: clCreateProgramWithSource returned %s.\n", TranslateOpenCLError(err));
+				if (source)
+				{
+						delete[] source;
+						source = NULL;
+				}
+				return err;
 		}
 
 		// Build the program
 		// During creation a program is not built. You need to explicitly call build function.
 		// Here you just use create-build sequence,
-		// but there are also other possibilities when program consist of several parts,
-		// some of which are libraries, and you may want to consider using clCompileProgram and clLinkProgram as
-		// alternatives.
-		//sprintf(build_options," -cl-std=CL2.0 -s %s%s",kernel_file_path,kernel_file_name);
 		err = clBuildProgram(ocl->program, 1, &ocl->device, build_options, NULL, NULL);
-		//err = clBuildProgram(ocl->program, 1, &ocl->device, " -g -s /home/dgerzhoy/Workspace/Add_Overhead/Template.cl", NULL, NULL);
-		//err = clBuildProgram(ocl->program, 1, &ocl->device, " -cl-std=CL2.0 -s /home/dgerzhoy/Workspace/Add_Overhead/Template.cl", NULL, NULL);
-		//err = clBuildProgram(ocl->program, 1, &ocl->device, " -cl-std=CL1.2 -s /home/dgerzhoy/Workspace/Add_Overhead/Template.cl", NULL, NULL);
+
 		if (CL_SUCCESS != err)
 		{
-				LogError("Error: clBuildProgram() for source program returned %s.\n", TranslateOpenCLError(err));
+				fprintf(stderr,"Error: clBuildProgram() for source program returned %s.\n", TranslateOpenCLError(err));
 
 				// In case of error print the build log to the standard output
 				// First check the size of the log
@@ -786,26 +767,8 @@ int CreateAndBuildProgram(std::string kernel_file_path, std::string kernel_file_
 						std::vector<char> build_log(log_size);
 						clGetProgramBuildInfo(ocl->program, ocl->device, CL_PROGRAM_BUILD_LOG, log_size, &build_log[0], NULL);
 
-						LogError("Error happened during the build of OpenCL program.\nBuild log:%s", &build_log[0]);
+						fprintf(stderr,"Error happened during the build of OpenCL program.\nBuild log:%s", &build_log[0]);
 				}
 		}
-		#if 0
-			else {
-			size_t log_size = 0;
-			clGetProgramBuildInfo(ocl->program, ocl->device, CL_PROGRAM_BUILD_LOG, 0, NULL, &log_size);
-
-			std::vector<char> build_log(log_size);
-			clGetProgramBuildInfo(ocl->program, ocl->device, CL_PROGRAM_BUILD_LOG, log_size, &build_log[0], NULL);
-
-			LogError("No Error: happened during the build of OpenCL program.\nBuild log:%s", &build_log[0]);
-		}
-		#endif
-Finish:
-		if (source)
-		{
-				delete[] source;
-				source = NULL;
-		}
-
 		return err;
 }

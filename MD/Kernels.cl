@@ -1,11 +1,12 @@
 /*
- *
+ *	
  * 
  *	Author: Daniel Gerzhoy
  *	email: dgerzhoy@umd.edu
  *
  *	This work is meant for academic use only. The author claims no ownership of any code herein, or responsibility for its use.
  */
+
 #include "MD.h"
 
 void TranslateOpenCLError(int errorCode)

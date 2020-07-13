@@ -1,3 +1,12 @@
+/*
+ * This code is a heavily edited version of an example OpenCL program provided by Intel.
+ * 
+ *	Author: Daniel Gerzhoy
+ *	email: dgerzhoy@umd.edu
+ *
+ *	This work is meant for academic use only. The author claims no ownership of any code herein, or responsibility for its use.
+ */
+
 #pragma once
 #include <stdio.h>
 #include <stdlib.h>
@@ -6,7 +15,6 @@
 #include <omp.h>
 #include <string>
 
-//#include "EventStats.h"
 #include <CL/cl.h>
 #include "utils.h"
 
@@ -70,13 +78,6 @@ struct ocl_args_d_t
 	int nQueues;
 	int nKernels;
 
-
-
-	//From here down need to be added in a separate structure for every benchmark (pretty much only if not using svmAlloc
-	//cl_mem are only if you are not using SVM_Alloc on your buffers (Not used for our purposes)
-    //cl_mem           srcA;              // hold first source buffer
-    //cl_mem           srcB;              // hold second source buffer
-	//cl_mem           dstMem;            // hold destination buffer
 };
 
 

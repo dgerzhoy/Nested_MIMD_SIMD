@@ -53,7 +53,7 @@ pInner_n(nThreads),
 w(N/2),
 a_flat(N*N)
 {
-	LogInfo("N = %d | nG = %d | gws = %d | lws = %d | hwBlocks = %d | blocks = %d | nthreads = %d | gRes %d\n", N,NUM_GROUPS, gws, lws, hwBlocks, blocks, nThreads, group_residency);
+	printf("N = %d | nG = %d | gws = %d | lws = %d | hwBlocks = %d | blocks = %d | nthreads = %d | gRes %d\n", N,NUM_GROUPS, gws, lws, hwBlocks, blocks, nThreads, group_residency);
 
 	xin = (complex *)calloc(N*N, sizeof(complex));
 	if(xin  == NULL )
@@ -160,11 +160,11 @@ int CL_Buffers_t::GPU_Schedule(int tid, int kernel_nB, int kernel_id)
 		j = last_issued%(gR*nG);
 		while(j != last_issued-1)
 		{
-			//LogInfo("%d = Group %d | Slot %d\n",j, j%nG,j/nG);
+			//printf("%d = Group %d | Slot %d\n",j, j%nG,j/nG);
 			val = pBlocks[j];
 			if(val == nB  || val == -1*nB)
 			{
-				//LogInfo("\ttid %d | Scheduled iter %d | Block %d | Group %d | Slot %d\n",tid,iter,i,j%nG,j/nG);
+				//printf("\ttid %d | Scheduled iter %d | Block %d | Group %d | Slot %d\n",tid,iter,i,j%nG,j/nG);
 
 				//pBlocks is the trigger, so all parameters need to be set before it 
 				pThreads[j] = tid;
@@ -189,7 +189,7 @@ void CL_Buffers_t::GPU_Sync(int tid, int iter, int wait_blocks, int kernel_id)
 	unsigned long int count = 0;
 	int done = pDone[tid];
 
-	//LogInfo("Waiting for | tid = %d | iter = %d | blocks = %d | kernel = %d\n",tid,iter, wait_blocks, kernel_id);
+	//printf("Waiting for | tid = %d | iter = %d | blocks = %d | kernel = %d\n",tid,iter, wait_blocks, kernel_id);
 
 	while(done != wait_blocks)
 	{
@@ -198,7 +198,7 @@ void CL_Buffers_t::GPU_Sync(int tid, int iter, int wait_blocks, int kernel_id)
 		count++;
 		if(count%10000000000==0)
 		{
-			LogInfo("Still waiting for | Tid = %d | iter = %d | Count = %lu | Done = %d\n",tid,iter,count, done);
+			printf("Still waiting for | Tid = %d | iter = %d | Count = %lu | Done = %d\n",tid,iter,count, done);
 			if(tid == 0)
 			{
 				print_schedule_H();
@@ -207,7 +207,7 @@ void CL_Buffers_t::GPU_Sync(int tid, int iter, int wait_blocks, int kernel_id)
 		}
 		if(count >= 3000000000)
 		{
-			LogError("\nTid = %d | ============================================Stuck in Infinite loop, done = %d / %d | iter = %d\n",tid,done,wait_blocks,iter);
+			fprintf(stderr,"\nTid = %d | ============================================Stuck in Infinite loop, done = %d / %d | iter = %d\n",tid,done,wait_blocks,iter);
 			if(tid == 0)
 			{
 				print_schedule_H();
@@ -215,7 +215,7 @@ void CL_Buffers_t::GPU_Sync(int tid, int iter, int wait_blocks, int kernel_id)
 			KillCommKernel();
 			//done = pDone[iter];
 			done = pDone[tid];
-			LogInfo("Tid = %d | Done = %d\n",tid, done);
+			printf("Tid = %d | Done = %d\n",tid, done);
 			if(tid == 0)
 			{
 				print_schedule_H();
@@ -227,17 +227,17 @@ void CL_Buffers_t::GPU_Sync(int tid, int iter, int wait_blocks, int kernel_id)
 		#endif
 	}
 	pDone[tid] = 0;
-	//LogInfo("Tid %d | iter %d | done waiting for done  = %d | count %d\n",tid,iter,done,count);
+	//printf("Tid %d | iter %d | done waiting for done  = %d | count %d\n",tid,iter,done,count);
 }
 
 void CL_Buffers_t::KillCommKernel()
 {
-	LogInfo("Killing Comm Kernels\n");
+	printf("Killing Comm Kernels\n");
 	pFinish[0] = 1;
 	
 	CHECK_ERRORS(clFinish(ocl->commandQueues[0]));
 
-	LogInfo("Done Killing Comm Kernels\n");
+	printf("Done Killing Comm Kernels\n");
 }
 
 
@@ -253,14 +253,14 @@ void CL_Buffers_t::print_schedule()
 
 	for(int i = 0; i < nG; i++)
 	{
-		LogInfo("%d [ ",i);
+		printf("%d [ ",i);
 		for(int j = 0; j < gR; j++)
 		{
 			idx = i*gR+j;
 			block = pBlocks[idx];
-			LogInfo("(%4d,%2d) ",iter,block);
+			printf("(%4d,%2d) ",iter,block);
 		}
-		LogInfo("]\n");
+		printf("]\n");
 	}
 }
 
@@ -275,29 +275,29 @@ void CL_Buffers_t::print_schedule_H()
 	int kern;
 	int idx;
 
-	LogInfo("Iters\n");
+	printf("Iters\n");
 	for(int i = 0; i < gR; i++)
 	{
-		LogInfo("%d [ ",i);
+		printf("%d [ ",i);
 		for(int j = 0; j < nG; j++)
 		{
 			idx = i*nG+j;
 			tid  = pThreads[idx];
-			LogInfo("%6d ",iter);
+			printf("%6d ",iter);
 		}
-		LogInfo("]\n");
+		printf("]\n");
 	}
-	LogInfo("Blocks\n");
+	printf("Blocks\n");
 	for(int i = 0; i < gR; i++)
 	{
-		LogInfo("%d [ ",i);
+		printf("%d [ ",i);
 		for(int j = 0; j < nG; j++)
 		{
 			idx = i*nG+j;
 			block = pBlocks[idx];
-			LogInfo("%6d ",block);
+			printf("%6d ",block);
 		}
-		LogInfo("]\n");
+		printf("]\n");
 	}
 
 }
