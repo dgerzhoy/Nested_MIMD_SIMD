@@ -22,15 +22,15 @@ Rather than launching an OpenCL kernel every time we want to do work on the GPU.
 
 In this repository we have 7 benchmarks.
 
-Benchmark           Source
-----------------  ----------------------------
-MD                  OMP Source Code Repository
-FFT6                OMP Source Code Repository
-330.art_m           SPEC OMP 2001
-358.botsalgn        SPEC OMP 2012
-359.botsspar        SPEC OMP 2012
-372.smithwa         SPEC OMP 2012
-358.botsalgn        SPEC OMP 2012
+| Benchmark        |   Source                       |
+|:---------------- | ------------------------------:|
+| MD               |   OMP Source Code Repository   |
+| FFT6             |   OMP Source Code Repository   |
+| 330.art_m        |   SPEC OMP 2001                |
+| 358.botsalgn     |   SPEC OMP 2012                |
+| 359.botsspar     |   SPEC OMP 2012                |
+| 372.smithwa      |   SPEC OMP 2012                |
+| 358.botsalgn     |   SPEC OMP 2012                |
 
 # Hardware Requirements
 
