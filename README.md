@@ -26,7 +26,7 @@ Benchmark           Source
 ----------------  ----------------------------
 MD                  OMP Source Code Repository
 FFT6                OMP Source Code Repository
-330.Art             SPEC OMP 2001
+330.art_m           SPEC OMP 2001
 358.botsalgn        SPEC OMP 2012
 359.botsspar        SPEC OMP 2012
 372.smithwa         SPEC OMP 2012
