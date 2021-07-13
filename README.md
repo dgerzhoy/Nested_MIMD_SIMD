@@ -3,11 +3,9 @@ Author: Daniel Gerzhoy
 
 # Nested_MIMD_SIMD
 
-This codebase provides two examples of Nested MIMD-SIMD Parallelism as described in:
+This codebase provides seven examples of Nested MIMD-SIMD Parallelism as described in:
 
 Gerzhoy, D., Sun, X., Zuzak, M., and Yeung, D. "Nested MIMD-SIMD Parallelization for Heterogeneous Microprocessors." ACM Transactions on Architecture and Code Optimization. Published December 2019.
-
-The two example benchmarks are MD and FFT6 from the openmp source code repository.
 
 These benchmarks are edited to launch their inner loops as kernels onto the GPU.
 
