@@ -18,6 +18,8 @@
 #include <CL/cl.h>
 #include "utils.h"
 
+#include "EventStats.h"
+
 #pragma OPENCL EXTENSION cl_khr_icd : enable
 
 #define CHECK_ERRORS(ERR)                        			\
@@ -72,7 +74,7 @@ struct ocl_args_d_t
   	cl_command_queue *commandQueues;      // hold the commands-queue handler(s)
   	cl_command_queue deviceQueue;
 	cl_kernel        *kernels;            // hold the kernel handler(s)
-	//eventStats 		 *kernelStats;		//holds the event statistics for each kernel
+	eventStats 		 *kernelStats;		//holds the event statistics for each kernel
 
 	//Should be the same for now
 	int nQueues;

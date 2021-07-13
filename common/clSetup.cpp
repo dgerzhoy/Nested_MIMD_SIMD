@@ -514,15 +514,16 @@ cl_platform_id FindOpenCLPlatform(const char* preferredPlatform, cl_device_type 
 		for (cl_uint i = 0; i < numPlatforms; i++)
 		{
 			// printf("Platform [%d]: ",i);
-			CHECK_ERRORS(clGetPlatformInfo(platforms[i], CL_PLATFORM_NAME, 0, NULL, &stringLength));
+			CHECK_ERRORS(clGetPlatformInfo(platforms[i], CL_PLATFORM_VENDOR, 0, NULL, &stringLength));
 			std::vector<char> platformName(stringLength);
 
-			CHECK_ERRORS(clGetPlatformInfo(platforms[i], CL_PLATFORM_NAME, stringLength, &platformName[0], NULL));
-			// for (std::vector<char>::const_iterator j = platformName.begin(); j != platformName.end(); ++j)
-			// {
-			// 		printf("%c", *j);
-			// 	}
-			// printf("\n");
+			CHECK_ERRORS(clGetPlatformInfo(platforms[i], CL_PLATFORM_VENDOR, stringLength, &platformName[0], NULL));
+			printf("Platform %d: ", i);
+			for (std::vector<char>::const_iterator j = platformName.begin(); j != platformName.end(); ++j)
+			{
+					printf("%c", *j);
+				}
+			printf("\n");
 		}
 
 		// Check if one of the available platform matches the preferred requirements
@@ -542,8 +543,8 @@ cl_platform_id FindOpenCLPlatform(const char* preferredPlatform, cl_device_type 
 				// match is true if the platform's name is the required one or don't care (NULL)
 				if (match)
 				{
-						//printf("Match Found\n");
-						//printPlatformInfo(platforms[i]);
+						printf("Match Found %d\n",i);
+						printPlatformInfo(platforms[i]);
 						
 						// Obtains the number of deviceType devices available on platform
 						// When the function failed we expect numDevices to be zero.
