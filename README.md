@@ -86,7 +86,7 @@ Instead, there is a patch file e.g. 372.smithwa.Nested_372_smithwa.omp2012.v1.0.
 
 This was created using SPEC2012's makesrcalt utility.
 
-Thus you must have a copy of SPEC OMP 2012 (and SPEC OMP 2001 for 330.art) in order to reconstruct these benchmarks.
+Thus you must have a copy of SPEC OMP 2012 (and SPEC OMP 2001 for 330.art) in order to reconstruct these benchmarks. As well as provide links to the data directory in the SPEC area.
 
 Reconstruction is achieved using a provided script in each spec benchmark directory:
     e.g. reconstruct_372_smithwa.sh
@@ -98,7 +98,7 @@ Instructions for its use are in the header of these scripts, but generally:
 e.g.
     source reconstruct_372_smithwa.sh $SPEC ./ 372.smithwa.Nested_372_smithwa.omp2012.v1.0.tar.xz
 
-Note that the script must be sourced and the second two options are optional, with defaults in the current directory.
+Note that the script must be called with "source" and the second two options are optional, with defaults in the current directory.
 
 # Compiling
 
@@ -110,3 +110,21 @@ make
 Each benchmark directory has a runall.sh script that shows how to run the kernel.
 ./runall.sh
 
+# Region of Interest
+
+Each benchmark will print out the contents of a timer timing the region of interest. (See common/utils.cpp)
+
+# Useful Scripts
+
+We provide two utility scripts that manage the GPU:
+    
+    tools/disable_watchdog.sh
+    tools/reset_gpu.sh
+
+The LaunchDaemon we use to implement low-latency kernel launch runs the entire duration of the region of interest.
+
+If the benchmark runs for long enough, the operating system can kill the LaunchDaemon Kernel.
+In order to avoid this, in the tools/ directory exists disable_watchdog.sh, which will turn of hang checking for the GPU (on a linux system, only tested on Ubuntu 16.04.6). You will need sudo access on your system to use it.
+
+If for some reason your GPU is locked up, there is also reset_gpu.sh which will do just that. Sudo access also Required.
+358.botsalgn makes use of the reset_gpu.sh script between runs.
