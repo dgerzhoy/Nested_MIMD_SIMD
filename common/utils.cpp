@@ -115,8 +115,10 @@ void print_timer(int i)
 {
 
 	//printf("Timer %d: %f\n",i,dTimer[i]);
-	printf("Timer %d: %f ( %d iters)\n",i,dTimer[i],count[i]);
-
+    if (dTimer[i] > 0.0)
+    {
+	    printf("Timer %d: %f ( %d iters)\n",i,dTimer[i],count[i]);
+    }
 }
 
 void print_timers(int nTimers)

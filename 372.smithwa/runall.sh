@@ -10,6 +10,8 @@
 #41 ref 1048740
 N=41
 
+#./run.sh <Size> <CPU Threads> <0 = CPU kernel, 2 = UNUSED, 3 = GPU Kernel>
+
 #The grid options in grid_def change the way the work is split up on the CPU
 
 #rm grid_def.h
@@ -31,8 +33,8 @@ make clean all
 # ./smithwaterman $N 8 0 |& tee CPU8_FUSE_GRID
 ./smithwaterman $N 4 0 |& tee CPU4_FUSE_GRID
 ./smithwaterman $N 1 0 |& tee CPU1_FUSE_GRID
-#
-#
+
+
 #rm grid_def.h
 #echo "#define NO_GRID" > grid_def.h
 #make clean all CFLAGS="-DNO_GRID"
