@@ -126,3 +126,7 @@ In order to avoid this, in the tools/ directory exists disable_watchdog.sh, whic
 
 If for some reason your GPU is locked up, there is also reset_gpu.sh which will do just that. Sudo access also Required.
 358.botsalgn makes use of the reset_gpu.sh script between runs.
+
+# Acknowledgements
+
+This research was funded by NSF Award CCF-1618963.
